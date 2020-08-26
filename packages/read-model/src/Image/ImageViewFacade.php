@@ -36,8 +36,21 @@ class ImageViewFacade
      * @param string $entityClass
      * @param int[] $entityIds
      * @return \Shopsys\ReadModelBundle\Image\ImageView[]|null[]
+     * @deprecated since Shopsys Framework 9.1, use getMainImagesByEntityIds() instead
      */
     public function getForEntityIds(string $entityClass, array $entityIds): array
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since Shopsys Framework 9.1. Use getMainImagesByEntityIds() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->getMainImagesByEntityIds($entityClass, $entityIds);
+    }
+
+    /**
+     * @param string $entityClass
+     * @param int[] $entityIds
+     * @return \Shopsys\ReadModelBundle\Image\ImageView[]|null[]
+     */
+    public function getMainImagesByEntityIds(string $entityClass, array $entityIds): array
     {
         $imagesIndexedByEntityIds = $this->imageFacade->getImagesByEntitiesIndexedByEntityId($entityIds, $entityClass);
 
