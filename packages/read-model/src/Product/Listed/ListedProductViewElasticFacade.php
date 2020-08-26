@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shopsys\ReadModelBundle\Product\Listed;
 
+use BadMethodCallException;
 use Shopsys\FrameworkBundle\Component\Domain\Domain;
 use Shopsys\FrameworkBundle\Component\Paginator\PaginationResult;
 use Shopsys\FrameworkBundle\Model\Customer\User\CurrentCustomerUser;
@@ -67,6 +68,11 @@ class ListedProductViewElasticFacade implements ListedProductViewFacadeInterface
     protected $productActionViewFacade;
 
     /**
+     * @var \Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper
+     */
+    protected $createProductViewsFromEntityHelper;
+
+    /**
      * @param \Shopsys\FrameworkBundle\Model\Product\ProductFacade $productFacade
      * @param \Shopsys\FrameworkBundle\Model\Product\Accessory\ProductAccessoryFacade $productAccessoryFacade
      * @param \Shopsys\FrameworkBundle\Component\Domain\Domain $domain
@@ -76,6 +82,7 @@ class ListedProductViewElasticFacade implements ListedProductViewFacadeInterface
      * @param \Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFactory $listedProductViewFactory
      * @param \Shopsys\ReadModelBundle\Product\Action\ProductActionViewFacade $productActionViewFacade
      * @param \Shopsys\ReadModelBundle\Image\ImageViewFacade $imageViewFacade
+     * @param \Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper|null $createProductViewsFromEntityHelper
      */
     public function __construct(
         ProductFacade $productFacade,
@@ -86,7 +93,8 @@ class ListedProductViewElasticFacade implements ListedProductViewFacadeInterface
         ProductOnCurrentDomainFacadeInterface $productOnCurrentDomainFacade,
         ListedProductViewFactory $listedProductViewFactory,
         ProductActionViewFacade $productActionViewFacade,
-        ImageViewFacade $imageViewFacade
+        ImageViewFacade $imageViewFacade,
+        ?CreateProductViewsFromEntityHelper $createProductViewsFromEntityHelper = null
     ) {
         $this->productFacade = $productFacade;
         $this->productAccessoryFacade = $productAccessoryFacade;
@@ -97,6 +105,23 @@ class ListedProductViewElasticFacade implements ListedProductViewFacadeInterface
         $this->listedProductViewFactory = $listedProductViewFactory;
         $this->productActionViewFacade = $productActionViewFacade;
         $this->imageViewFacade = $imageViewFacade;
+        $this->createProductViewsFromEntityHelper = $createProductViewsFromEntityHelper;
+    }
+
+    /**
+     * @required
+     * @param \Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper $createProductViewsFromEntityHelper
+     * @internal This function will be replaced by constructor injection in next major
+     */
+    public function setCreateProductViewsFromEntityHelper(CreateProductViewsFromEntityHelper $createProductViewsFromEntityHelper): void
+    {
+        if ($this->createProductViewsFromEntityHelper !== null && $this->createProductViewsFromEntityHelper !== $createProductViewsFromEntityHelper) {
+            throw new BadMethodCallException(sprintf('Method "%s" has been already called and cannot be called multiple times.', __METHOD__));
+        }
+        if ($this->createProductViewsFromEntityHelper === null) {
+            @trigger_error(sprintf('The %s() method is deprecated and will be removed in the next major. Use the constructor injection instead.', __METHOD__), E_USER_DEPRECATED);
+            $this->createProductViewsFromEntityHelper = $createProductViewsFromEntityHelper;
+        }
     }
 
     /**
@@ -248,24 +273,19 @@ class ListedProductViewElasticFacade implements ListedProductViewFacadeInterface
     /**
      * @param \Shopsys\FrameworkBundle\Model\Product\Product[] $products
      * @return \Shopsys\ReadModelBundle\Product\Listed\ListedProductView[]
+     * @deprecated since Shopsys Framework 9.1
+     * @see \Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper class instead
      */
     protected function createFromProducts(array $products): array
     {
-        $imageViews = $this->imageViewFacade->getForEntityIds(Product::class, $this->getIdsForProducts($products));
-        $productActionViews = $this->productActionViewFacade->getForProducts($products);
-
-        $listedProductViews = [];
-        foreach ($products as $product) {
-            $productId = $product->getId();
-            $listedProductViews[$productId] = $this->listedProductViewFactory->createFromProduct($product, $imageViews[$productId], $productActionViews[$productId]);
-        }
-
-        return $listedProductViews;
+        return $this->createProductViewsFromEntityHelper->createFromProducts($products);
     }
 
     /**
      * @param \Shopsys\FrameworkBundle\Model\Product\Product[] $products
      * @return int[]
+     * @deprecated since Shopsys Framework 9.1
+     * @see \Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper class instead
      */
     protected function getIdsForProducts(array $products): array
     {
