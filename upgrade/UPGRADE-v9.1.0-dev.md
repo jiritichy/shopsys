@@ -54,3 +54,48 @@ There you can find links to upgrade notes for other versions too.
 - phpstan analyse increased to level 5 ([#1922](https://github.com/shopsys/shopsys/pull/1922))
     - increasing phpstan level on your project is optional and may be set in `build.xml`
     - see #project-base-diff to update your project
+
+- introduce read model layer into product detail ([#1999](https://github.com/shopsys/shopsys/pull/1999))
+    - following methods has changed their interface:
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewElasticFacade::__construct()`
+            ```diff
+                public function __construct(
+                    ProductFacade $productFacade,
+                    ProductAccessoryFacade $productAccessoryFacade,
+                    Domain $domain,
+                    CurrentCustomerUser $currentCustomerUser,
+                    TopProductFacade $topProductFacade,
+                    ProductOnCurrentDomainFacadeInterface $productOnCurrentDomainFacade,
+                    ListedProductViewFactory $listedProductViewFactory,
+                    ProductActionViewFacade $productActionViewFacade,
+            -       ImageViewFacade $imageViewFacade
+            +       ImageViewFacade $imageViewFacade,
+            +       ?CreateProductViewsFromEntityHelper $createProductViewsFromEntityHelper = null
+                )
+            ```
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::__construct()`
+            ```diff
+                public function __construct(
+                    ProductFacade $productFacade,
+                    ProductAccessoryFacade $productAccessoryFacade,
+                    Domain $domain,
+                    CurrentCustomerUser $currentCustomerUser,
+                    TopProductFacade $topProductFacade,
+                    ProductOnCurrentDomainFacadeInterface $productOnCurrentDomainFacade,
+                    ListedProductViewFactory $listedProductViewFactory,
+                    ProductActionViewFacade $productActionViewFacade,
+            -       ImageViewFacade $imageViewFacade
+            +       ImageViewFacade $imageViewFacade,
+            +       ?CreateProductViewsFromEntityHelper $createProductViewsFromEntityHelper = null
+                )
+            ```
+    - following methods and properties were deprecated and will be removed in the next major version:
+        - `Shopsys\ReadModelBundle\Image\ImageViewFacade::getForEntityIds()` use `getMainImagesByEntityIds()` instead
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewElasticFacade::createFromProducts()` use `\Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper::createFromProducts()` instead
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewElasticFacade::getIdsForProducts()` use `\Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper::getIdsForProducts()` instead
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::$listedProductViewFactory`
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::$imageViewFacade`
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::$productActionViewFacadey`
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::createFromProducts()` use `\Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper::createFromProducts()` instead
+        - `Shopsys\ReadModelBundle\Product\Listed\ListedProductViewFacade::getIdsForProducts()` use `\Shopsys\ReadModelBundle\Product\Listed\CreateProductViewsFromEntityHelper::getIdsForProducts()` instead
+    - see #project-base-diff to update your project
