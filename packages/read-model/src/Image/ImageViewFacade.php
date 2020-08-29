@@ -65,6 +65,23 @@ class ImageViewFacade
     }
 
     /**
+     * @param string $entityClass
+     * @param int $entityId
+     * @return \Shopsys\ReadModelBundle\Image\ImageView[]
+     */
+    public function getAllImagesByEntityId(string $entityClass, int $entityId): array
+    {
+        $images = $this->imageFacade->getImagesByEntityId($entityId, $entityClass);
+
+        $imageViews = [];
+        foreach ($images as $image) {
+            $imageViews[] = $this->createImageViewOrNullFromImage($image);
+        }
+
+        return $imageViews;
+    }
+
+    /**
      * @param \Shopsys\FrameworkBundle\Component\Image\Image|null $image
      * @return \Shopsys\ReadModelBundle\Image\ImageView|null
      */

@@ -493,4 +493,13 @@ class CategoryFacade
         }
         return $changedCategoryNames;
     }
+
+    /**
+     * @param \Shopsys\FrameworkBundle\Model\Product\Product $product
+     * @return \Shopsys\FrameworkBundle\Model\Category\Category
+     */
+    public function getProductMainCategoryOnCurrentDomain(Product $product): Category
+    {
+        return $this->getProductMainCategoryByDomainId($product, $this->domain->getId());
+    }
 }
