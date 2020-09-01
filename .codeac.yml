@@ -3,6 +3,8 @@ version: '1'
 tools:
     bandit:
         enabled: false
+    detekt:
+        enabled: false
     eslint:
         enabled: false
     ethlint:
@@ -13,6 +15,8 @@ tools:
         enabled: false
     phpmd:
         enabled: false
+    phpstan:
+        enabled: false
     pylint:
         enabled: false
     revive:
@@ -21,9 +25,7 @@ tools:
         enabled: false
     scsslint:
         enabled: false
-    tslint:
-        enabled: false
-    phpstan:
-        enabled: false
     tfsec:
+        enabled: false
+    tslint:
         enabled: false
