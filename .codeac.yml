@@ -28,4 +28,4 @@ tools:
     tfsec:
         enabled: false
     tslint:
-        enabled: false
+        enabled: true
