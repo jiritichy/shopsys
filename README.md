@@ -1,5 +1,7 @@
 # Shopsys Framework
 [![Build Status](https://travis-ci.org/shopsys/shopsys.svg?branch=master)](https://travis-ci.org/shopsys/shopsys)
+[![Codeac](https://static.codeac.io/badges/2-291956836.svg "Codeac")](https://app.codeac.io/github/jiritichy/shopsys)
+
 
 Shopsys Framework is a **fully functional ecommerce platform for businesses transitioning into tech-companies with their own software development team**.
 It contains the most common B2C and B2B features for online stores, and its infrastructure is prepared for high scalability.
